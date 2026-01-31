@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 26,
     fontWeight: "800",
-    color: "#333333", // เปลี่ยนเป็นสีเทาเข้ม (อ่านง่ายและดูแพง)
+    color: "#333333",
     marginBottom: 20,
     marginTop: 10,
   },
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#555555", // สีเทากลางๆ ไม่แย่งสายตา
+    color: "#555555",
     marginBottom: 8,
   },
   imageContainer: {
@@ -147,19 +147,19 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#FFFFFF",
     borderWidth: 1.5,
-    borderColor: "#EEF2EE", // ขอบเขียวอ่อนจางๆ มากๆ
+    borderColor: "#EEF2EE",
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
-    color: "#444444", // สีข้อความใน Input เป็นสีเทาเข้ม
+    color: "#444444",
   },
   textArea: {
     height: 100,
     textAlignVertical: "top",
   },
   saveButton: {
-    backgroundColor: "#4CAF50", // ปุ่มสีเขียวสำหรับ Action หลัก
+    backgroundColor: "#4CAF50",
     paddingVertical: 16,
     borderRadius: 14,
     alignItems: "center",
