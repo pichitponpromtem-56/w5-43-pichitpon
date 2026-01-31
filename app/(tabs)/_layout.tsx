@@ -8,10 +8,14 @@ export default function Layout() {
         headerShown: false,
         tabBarActiveTintColor: "#4fb054",
         tabBarInactiveTintColor: "#999",
+        tabBarLabelStyle: {
+            fontSize: 14,
+            fontWeight: "600"
+        },
         tabBarStyle: {
           backgroundColor: "#fff",
           borderTopWidth: 0,
-          elevation: 10,
+          paddingTop: 20,
         },
       }}
     >
