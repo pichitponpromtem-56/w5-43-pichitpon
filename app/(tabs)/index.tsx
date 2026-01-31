@@ -5,50 +5,36 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "expo-router";
 
 export default function ListScreen() {
-  const [items, setItems] = useState([]);
-  const navigation = useNavigation();
+  const [allSnack, setAllSnack] = useState("");
 
-  const loadData = async () => {
-    try {
-      const data = await AsyncStorage.getItem("snack");
-      setItems(data ? JSON.parse(data) : []);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  // ดึงข้อมูลใหม่ทุกครั้งที่สลับหน้ามาเจอกัน
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", loadData);
-    return unsubscribe;
-  }, [navigation]);
+    loadSnack();
+  }, []);
 
-  // ฟังก์ชันลบข้อมูล
-  const deleteItem = async (id) => {
-    const filtered = items.filter((it) => it.id !== id);
-    setItems(filtered);
-    await AsyncStorage.setItem("snack", JSON.stringify(filtered));
-  };
+  async function loadSnack() {
+    const data = await AsyncStorage.getItem("snack");
+    if (data != null) {
+      setAllSnack(JSON.parse(data || "[]"));
+    }
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.headerTitle}>รายการทั้งหมด</Text>
       <FlatList
-        data={items}
-        keyExtractor={(item) => item.id}
+        data={allSnack}
+        keyExtractor={(_, i) => i.toString() }
         renderItem={({ item }) => (
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{item.snackName}</Text>
-              <Text style={styles.cardPrice}>฿{item.snackPrice}</Text>
+              <Text style={styles.cardTitle}>{item.snackName.toString()}</Text>
+              <Text style={styles.cardPrice}>฿{item.snackPrice.toString()}</Text>
             </View>
-            <Text style={styles.cardDes}>{item.snackDes}</Text>
+            <Text style={styles.cardDes}>{item.snackDes.toString()}</Text>
             <TouchableOpacity onPress={() => deleteItem(item.id)}>
               <Text style={styles.deleteText}>ลบรายการ</Text>
             </TouchableOpacity>
@@ -102,8 +88,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     textAlign: "right",
   },
-  empty: { 
-    textAlign: "center", 
-    color: "#999", 
-    marginTop: 50 },
+  empty: {
+    textAlign: "center",
+    color: "#999",
+    marginTop: 50,
+  },
 });

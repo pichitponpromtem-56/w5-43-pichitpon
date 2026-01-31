@@ -5,83 +5,86 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView
+  ScrollView,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [des, setDes] = useState("");
-  const [allSnack, setAllSnack] = useState([])
+  const [allSnack, setAllSnack] = useState("");
 
   useEffect(() => {
-        loadSnack()
-  }, [])
+    loadSnack();
+  }, [allSnack]);
 
-  async function loadSnack(){
-    const data = await AsyncStorage.getItem("snack")
-    setAllSnack(JSON.parse(data || "[]"))
+  async function loadSnack() {
+    const data = await AsyncStorage.getItem("snack");
+    if (data != null) {
+      setAllSnack(JSON.parse(data));
+    }
   }
 
   async function addSnack() {
     const snack = {
-        snackName : name,
-        snackPrice : price,
-        snackDes : des
-    }
+      snackName: name,
+      snackPrice: price,
+      snackDes: des,
+    };
 
-    console.log(snack)
+    console.log(snack);
 
-    const newSnack = [...allSnack, snack]
-    await AsyncStorage.setItem("snack", JSON.stringify(newSnack))
-    setName("")
-    setPrice("")
-    setDes("")
+    const newSnack = [...allSnack, snack];
+    await AsyncStorage.setItem("snack", JSON.stringify(newSnack));
+    setName("");
+    setPrice("");
+    setDes("");
   }
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>เพิ่มข้อมูลใหม่ {name} | {price} </Text>
+      <Text style={styles.header}>
+        เพิ่มข้อมูลใหม่ {name} | {price}{" "}
+      </Text>
 
       <View style={styles.cardForm}>
-
         {/* ส่วนกรอกข้อความ */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>หัวข้อ</Text>
-          <TextInput 
-            style={styles.input} 
+          <TextInput
+            style={styles.input}
             value={name}
             onChangeText={setName}
-            placeholder="ชื่อ" 
-            placeholderTextColor="#C1C1C1" 
+            placeholder="ชื่อ"
+            placeholderTextColor="#C1C1C1"
           />
         </View>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>ราคา</Text>
-          <TextInput 
-            style={styles.input} 
+          <TextInput
+            style={styles.input}
             value={price}
             onChangeText={setPrice}
-            placeholder="ราคา" 
-            placeholderTextColor="#C1C1C1" 
+            placeholder="ราคา"
+            placeholderTextColor="#C1C1C1"
           />
         </View>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>รายละเอียด</Text>
-          <TextInput 
-            style={[styles.input, styles.textArea]} 
+          <TextInput
+            style={[styles.input, styles.textArea]}
             value={des}
             onChangeText={setDes}
-            placeholder="ใส่รายละเอียดที่นี่..." 
+            placeholder="ใส่รายละเอียดที่นี่..."
             multiline
-            placeholderTextColor="#C1C1C1" 
+            placeholderTextColor="#C1C1C1"
           />
         </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={addSnack} >
+        <TouchableOpacity style={styles.saveButton} onPress={addSnack}>
           <Text style={styles.saveButtonText}>บันทึกรายการ</Text>
         </TouchableOpacity>
       </View>
