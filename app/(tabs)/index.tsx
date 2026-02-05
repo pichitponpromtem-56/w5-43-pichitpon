@@ -23,38 +23,51 @@ export default function ListScreen() {
 
   async function loadSnack() {
     const data = await AsyncStorage.getItem("snack");
-    if (data != null) {
+    if (data) {
       setAllSnack(JSON.parse(data));
     }
   }
 
   async function removeSnack(index: number) {
-    const newSnack = allSnack.filter((_, i) => i != index);
+    const newSnack = allSnack.filter((_, i) => i !== index);
     setAllSnack(newSnack);
     await AsyncStorage.setItem("snack", JSON.stringify(newSnack));
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>รายการทั้งหมด</Text>
+      <Text style={styles.headerTitle}>🍿 รายการทั้งหมด</Text>
+
       <FlatList
         data={allSnack}
         keyExtractor={(_, i) => i.toString()}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{item.snackName.toString()}</Text>
-              <Text style={styles.cardPrice}>
-                ฿{item.snackPrice.toString()}
-              </Text>
+              <Text style={styles.cardTitle}>{item.snackName}</Text>
+
+              <View style={styles.priceBadge}>
+                <Text style={styles.cardPrice}>฿{item.snackPrice}</Text>
+              </View>
             </View>
-            <Text style={styles.cardDes}>{item.snackDes.toString()}</Text>
-            <TouchableOpacity onPress={() => removeSnack(index)}>
+
+            <Text style={styles.cardDes}>{item.snackDes}</Text>
+
+            <TouchableOpacity
+              style={styles.deleteBtn}
+              onPress={() => removeSnack(index)}
+            >
               <Text style={styles.deleteText}>ลบรายการ</Text>
             </TouchableOpacity>
           </View>
         )}
-        ListEmptyComponent={<Text style={styles.empty}>ไม่มีข้อมูล</Text>}
+        ListEmptyComponent={
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyEmoji}>📭</Text>
+            <Text style={styles.empty}>ยังไม่มีรายการ</Text>
+          </View>
+        }
       />
     </View>
   );
@@ -64,53 +77,87 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#F4F6F8",
   },
+
   headerTitle: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "800",
-    color: "#333",
+    color: "#222",
     marginBottom: 20,
   },
+
   card: {
     backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 20,
-    marginBottom: 15,
-
-    elevation: 6,
+    padding: 18,
+    borderRadius: 18,
+    marginBottom: 16,
 
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
+
   cardHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
+
   cardTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "700",
     color: "#2E7D32",
   },
+
+  priceBadge: {
+    backgroundColor: "#E8F5E9",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 20,
+  },
+
   cardPrice: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4CAF50",
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#388E3C",
   },
+
   cardDes: {
-    color: "#666",
-    marginTop: 5,
+    color: "#555",
+    marginTop: 8,
+    lineHeight: 20,
   },
+
+  deleteBtn: {
+    alignSelf: "flex-end",
+    marginTop: 12,
+    backgroundColor: "#FFEAEA",
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+
   deleteText: {
-    color: "#FF5252",
-    marginTop: 10,
+    color: "#E53935",
     fontWeight: "600",
-    textAlign: "right",
+    fontSize: 14,
   },
+
+  emptyBox: {
+    alignItems: "center",
+    marginTop: 80,
+  },
+
+  emptyEmoji: {
+    fontSize: 50,
+    marginBottom: 10,
+  },
+
   empty: {
-    textAlign: "center",
     color: "#999",
-    marginTop: 50,
+    fontSize: 16,
   },
 });

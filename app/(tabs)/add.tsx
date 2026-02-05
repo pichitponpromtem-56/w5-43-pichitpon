@@ -13,7 +13,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [des, setDes] = useState("");
-  const [allSnack, setAllSnack] = useState("");
+  const [allSnack, setAllSnack] = useState<any[]>([]);
 
   useEffect(() => {
     loadSnack();
@@ -21,54 +21,54 @@ export default function Home() {
 
   async function loadSnack() {
     const data = await AsyncStorage.getItem("snack");
-    if (data != null) {
+    if (data) {
       setAllSnack(JSON.parse(data));
     }
   }
 
   async function addSnack() {
+    if (!name || !price) return;
+
     const snack = {
       snackName: name,
       snackPrice: price,
       snackDes: des,
     };
 
-    console.log(snack);
-
     const newSnack = [...allSnack, snack];
     await AsyncStorage.setItem("snack", JSON.stringify(newSnack));
+
+    setAllSnack(newSnack);
     setName("");
     setPrice("");
     setDes("");
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>
-        เพิ่มข้อมูลใหม่ {name} | {price}{" "}
-      </Text>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <Text style={styles.header}>➕ เพิ่มรายการใหม่</Text>
 
       <View style={styles.cardForm}>
-        {/* ส่วนกรอกข้อความ */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>หัวข้อ</Text>
+          <Text style={styles.label}>ชื่อสินค้า</Text>
           <TextInput
             style={styles.input}
             value={name}
             onChangeText={setName}
-            placeholder="ชื่อ"
-            placeholderTextColor="#C1C1C1"
+            placeholder="เช่น มันฝรั่งทอด"
+            placeholderTextColor="#BDBDBD"
           />
         </View>
 
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>ราคา</Text>
+          <Text style={styles.label}>ราคา (บาท)</Text>
           <TextInput
             style={styles.input}
             value={price}
             onChangeText={setPrice}
-            placeholder="ราคา"
-            placeholderTextColor="#C1C1C1"
+            keyboardType="numeric"
+            placeholder="เช่น 25"
+            placeholderTextColor="#BDBDBD"
           />
         </View>
 
@@ -78,9 +78,9 @@ export default function Home() {
             style={[styles.input, styles.textArea]}
             value={des}
             onChangeText={setDes}
-            placeholder="ใส่รายละเอียดที่นี่..."
+            placeholder="ใส่รายละเอียดเพิ่มเติม..."
             multiline
-            placeholderTextColor="#C1C1C1"
+            placeholderTextColor="#BDBDBD"
           />
         </View>
 
@@ -95,83 +95,72 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 25,
+    backgroundColor: "#F4F6F8",
+    padding: 24,
   },
+
   header: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "800",
-    color: "#333333",
-    marginBottom: 20,
-    marginTop: 10,
+    color: "#222",
+    marginBottom: 24,
   },
+
   cardForm: {
     backgroundColor: "#FFFFFF",
     borderRadius: 24,
     padding: 24,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.05,
-    shadowRadius: 20,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 6,
   },
-  label: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#555555",
-    marginBottom: 8,
-  },
-  imageContainer: {
-    width: "100%",
-    height: 180,
-    backgroundColor: "#F5F5F5",
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    borderStyle: "dashed",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-    overflow: "hidden",
-  },
-  placeholderText: {
-    color: "#999",
-    fontSize: 14,
-  },
-  selectedImage: {
-    width: "100%",
-    height: "100%",
-  },
+
   inputGroup: {
     marginBottom: 20,
   },
+
+  label: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#555",
+    marginBottom: 8,
+  },
+
   input: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FAFAFA",
     borderWidth: 1.5,
-    borderColor: "#EEF2EE",
+    borderColor: "#E0E0E0",
     borderRadius: 14,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     fontSize: 16,
-    color: "#444444",
+    color: "#333",
   },
+
   textArea: {
-    height: 100,
+    height: 110,
     textAlignVertical: "top",
   },
+
   saveButton: {
     backgroundColor: "#4CAF50",
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: 16,
     alignItems: "center",
+    marginTop: 10,
     shadowColor: "#4CAF50",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 5,
   },
+
   saveButtonText: {
     color: "#FFFFFF",
     fontSize: 17,
-    fontWeight: "bold",
+    fontWeight: "700",
+    letterSpacing: 0.5,
   },
 });
